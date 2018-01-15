@@ -41,14 +41,19 @@ app.get('/v1/album/:albumId', (req, res) => {
     }
 
     function handleAlbum(error, response, body) {
-        const data = JSON.parse(body);
-        const image = smallest(data.images);
+        try {
+            const data = JSON.parse(body);
+            const image = smallest(data.images);
 
-        Vibrant.from(image.url).getPalette().then(palette => {
-            res.append('content-type', 'application/json');
-            const cleanPalette = clean(palette);
-            res.send(JSON.stringify(cleanPalette));
-        });
+            Vibrant.from(image.url).getPalette().then(palette => {
+                res.append('content-type', 'application/json');
+                const cleanPalette = clean(palette);
+                res.send(JSON.stringify(cleanPalette));
+            });
+        } catch (e) {
+            console.error(e);
+            res.send('Error');
+        }
     }
 
     request(albumQuery, handleAlbum);
