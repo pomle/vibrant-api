@@ -3,6 +3,8 @@ const cors = require('cors');
 const request = require('request');
 const Vibrant = require('node-vibrant');
 
+const PORT = process.env.PORT || 5567;
+
 const app = express();
 
 app.use(cors());
@@ -52,4 +54,4 @@ app.get('/v1/album/:albumId', (req, res) => {
     request(albumQuery, handleAlbum);
 });
 
-app.listen(3500, () => console.log('Example app listening on port 3000!'))
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
