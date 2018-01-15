@@ -23,8 +23,8 @@ app.get('/v1/album/:albumId', (req, res) => {
     const albumQuery = {
         url: `https://api.spotify.com/v1/albums/${albumId}`,
         headers: {
-            'Authorization': 'Bearer BQCcQ3ud2yGugO6IPuv1abOokvFu0Z9dWiX7f9rd1In_dMP8fSgz1kQY-dRb6yXB-RI-8jrFMg6hxZDCD0EpVGctJ46cspOZTOjrb7GrxZt6UNu2RRlJzkKSWfzZQTN_Xa-aSWlsqD0ZrizMMdoaFDSwEGHZeAV5pzxhFBW1Qu0-'
-        }
+            'Authorization': req.headers['authorization'],
+        },
     };
 
     function clean(object) {
