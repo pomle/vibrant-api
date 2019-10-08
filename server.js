@@ -27,6 +27,10 @@ app.get('/v1/image/:url', (req, res) => {
         res.append('content-type', 'application/json');
         const cleanPalette = clean(palette);
         res.send(JSON.stringify(cleanPalette));
+    })
+    .catch(error => {
+        console.error(`Could not fetch URL: ${url}`);
+        console.error(error);
     });
 });
 
