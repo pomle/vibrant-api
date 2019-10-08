@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const request = require('request');
 const Vibrant = require('node-vibrant');
 
 const PORT = process.env.PORT || 5567;
@@ -9,54 +8,26 @@ const app = express();
 
 app.use(cors());
 
-function smallest(images) {
-    let smallest = images[0];
-    for (const image of images) {
-        if (image.width < smallest.width) {
-            smallest = image;
-        }
-    }
-    return smallest;
+function clean(object) {
+    const der = {};
+    Object.keys(object).forEach(key => {
+        const value = object[key];
+        der[key.toLowerCase().replace('_', '')] = value && typeof value === 'object' && !Array.isArray(value)
+            ? clean(value)
+            : value;
+    });
+    return der;
 }
 
-app.get('/v1/album/:albumId', (req, res) => {
-    const {albumId} = req.params;
+app.get('/v1/image/:url', (req, res) => {
+    const {url} = req.params;
 
-    const albumQuery = {
-        url: `https://api.spotify.com/v1/albums/${albumId}`,
-        headers: {
-            'Authorization': req.headers['authorization'],
-        },
-    };
-
-    function clean(object) {
-        const der = {};
-        Object.keys(object).forEach(key => {
-            const value = object[key];
-            der[key.toLowerCase().replace('_', '')] = value && typeof value === 'object' && !Array.isArray(value)
-                ? clean(value)
-                : value;
-        });
-        return der;
-    }
-
-    function handleAlbum(error, response, body) {
-        try {
-            const data = JSON.parse(body);
-            const image = smallest(data.images);
-
-            Vibrant.from(image.url).getPalette().then(palette => {
-                res.append('content-type', 'application/json');
-                const cleanPalette = clean(palette);
-                res.send(JSON.stringify(cleanPalette));
-            });
-        } catch (e) {
-            console.error(e);
-            res.send('Error');
-        }
-    }
-
-    request(albumQuery, handleAlbum);
+    Vibrant.from(url).getPalette()
+    .then(palette => {
+        res.append('content-type', 'application/json');
+        const cleanPalette = clean(palette);
+        res.send(JSON.stringify(cleanPalette));
+    });
 });
 
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
