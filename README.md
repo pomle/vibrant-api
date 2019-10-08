@@ -1,15 +1,14 @@
 # vibrant-api
 
-API to retrieve significant colors from Spotify albums.
+API to retrieve significant colors from Images.
 
 ### Usage
 
 Request with `curl`
 ```bash
 curl -X "GET" \
-    "https://[host]/v1/album/[albumId]" \
+    "https://[host]/v1/image/[url]" \
     -H "Accept: application/json" -H "Content-Type: application/json" \
-    -H "Authorization: Bearer [SPOTIFY BEARER TOKEN]"
 ```
 
 Response
